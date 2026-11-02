@@ -12,6 +12,7 @@ import {
   Search,
   WifiOff,
   LogOut,
+  Calculator,
 } from 'lucide-react';
 import { clearStoredAuth, StoredAuth } from '../api/client.js';
 
@@ -20,6 +21,7 @@ interface HeaderProps {
   onTabChange: (tab: string) => void;
   onNewTask: () => void;
   onSearch: () => void;
+  onOpenCalculator?: () => void;
   isConnected: boolean;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
@@ -32,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({
   onTabChange,
   onNewTask,
   onSearch,
+  onOpenCalculator,
   isConnected,
   theme,
   onToggleTheme,
@@ -113,6 +116,17 @@ export const Header: React.FC<HeaderProps> = ({
             <span>New Task</span>
             <kbd className="hidden rounded bg-white/20 px-1 font-mono text-[10px] sm:inline">n</kbd>
           </button>
+
+          {onOpenCalculator && (
+            <button
+              onClick={onOpenCalculator}
+              className="flex items-center gap-1.5 rounded-md border border-purple-500/40 bg-purple-500/10 px-2.5 py-1 text-xs font-semibold text-purple-400 hover:bg-purple-500/20"
+              title="Open Crazy Calculator"
+            >
+              <Calculator className="h-3.5 w-3.5" />
+              <span className="hidden md:inline">Crazy Calc</span>
+            </button>
+          )}
 
           <button
             onClick={onToggleTheme}

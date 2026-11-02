@@ -11,6 +11,7 @@ import { ActivityScreen } from './screens/ActivityScreen.js';
 import { SetupScreen } from './screens/SetupScreen.js';
 import { TaskDrawer } from './screens/TaskDrawer.js';
 import { NewTaskModal } from './components/NewTaskModal.js';
+import { CrazyCalculator } from './components/CrazyCalculator.js';
 
 export const App: React.FC = () => {
   const [auth, setAuth] = useState<StoredAuth | null>(() => getStoredAuth());
@@ -18,6 +19,7 @@ export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('board');
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [isNewTaskOpen, setIsNewTaskOpen] = useState(false);
+  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const { isConnected, highlightedTaskId } = useHubEvents();
@@ -93,6 +95,7 @@ export const App: React.FC = () => {
           const query = prompt('Search tasks by title:', searchQuery);
           if (query !== null) setSearchQuery(query);
         }}
+        onOpenCalculator={() => setIsCalculatorOpen(true)}
         isConnected={isConnected}
         theme={theme}
         onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
@@ -123,6 +126,9 @@ export const App: React.FC = () => {
 
       {/* New Task Modal */}
       <NewTaskModal isOpen={isNewTaskOpen} onClose={() => setIsNewTaskOpen(false)} />
+
+      {/* Crazy Calculator Modal */}
+      <CrazyCalculator isOpen={isCalculatorOpen} onClose={() => setIsCalculatorOpen(false)} />
     </div>
   );
 };
