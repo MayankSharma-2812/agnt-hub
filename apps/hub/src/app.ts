@@ -1,4 +1,7 @@
 import Fastify, { FastifyInstance } from 'fastify';
+import fastifyStatic from '@fastify/static';
+import path from 'node:path';
+import fs from 'node:fs';
 import Database from 'better-sqlite3';
 import { healthRoutes } from './routes/health.js';
 import { authRoutes } from './routes/auth.js';
@@ -53,6 +56,26 @@ export function buildApp(db: Database.Database): FastifyInstance {
   app.register(artifactRoutes);
   app.register(runRoutes);
   app.register(eventRoutes);
+
+  // Serve static web build if present
+  const possiblePaths = [
+    path.resolve(process.cwd(), 'apps/web/dist'),
+    path.resolve(process.cwd(), '../web/dist'),
+    path.resolve(process.cwd(), 'dist'),
+    path.resolve(import.meta.dirname, '../../apps/web/dist'),
+    path.resolve(import.meta.dirname, '../../../apps/web/dist'),
+    path.resolve(import.meta.dirname, '../apps/web/dist'),
+  ];
+  for (const distPath of possiblePaths) {
+    if (fs.existsSync(distPath)) {
+      app.register(fastifyStatic, {
+        root: distPath,
+        prefix: '/',
+        wildcard: false,
+      });
+      break;
+    }
+  }
 
   return app;
 }

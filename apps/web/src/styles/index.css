@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --color-bg: #0B0F14;
+  --color-surface: #121821;
+  --color-border: #1F2937;
+  --color-text: #E6EDF3;
+  --color-muted: #8B98A5;
+  --color-accent: #5B8CFF;
+  --color-success: #3FB950;
+  --color-warning: #D29922;
+  --color-danger: #F85149;
+}
+
+.light {
+  --color-bg: #F7F8FA;
+  --color-surface: #FFFFFF;
+  --color-border: #E3E7EC;
+  --color-text: #14181F;
+  --color-muted: #5B6672;
+  --color-accent: #2F5FE0;
+  --color-success: #1A7F37;
+  --color-warning: #9A6700;
+  --color-danger: #CF222E;
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+@keyframes highlight-pulse {
+  0% {
+    box-shadow: 0 0 0 2px var(--color-accent);
+  }
+  100% {
+    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+.card-highlight {
+  animation: highlight-pulse 2s ease-out;
+}
