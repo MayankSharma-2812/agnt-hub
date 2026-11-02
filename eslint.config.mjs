@@ -11,6 +11,7 @@ export default tseslint.config(
       '**/build/**',
       '**/coverage/**',
       '**/*.d.ts',
+      '**/fixtures/**',
     ],
   },
   {

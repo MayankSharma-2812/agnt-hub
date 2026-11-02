@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "type": "module",
   "bin": {
-    "hubd": "./dist/index.js"
+    "hubd": "./dist/cli.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -13,6 +13,10 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@agent-hub/shared": "workspace:*"
+    "@agent-hub/shared": "workspace:*",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6"
   }
 }

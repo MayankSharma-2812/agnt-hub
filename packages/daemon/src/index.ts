@@ -3,10 +3,16 @@
  * CLI and daemon watching hub tasks and running headless agy
  */
 
-import { VERSION } from '@agent-hub/shared';
+export * from './config.js';
+export * from './client.js';
+export * from './worktree.js';
+export * from './prompt.js';
+export * from './runner.js';
+export * from './daemon.js';
+export * from './doctor.js';
 
 export const DAEMON_NAME = 'hubd';
 
 export function getDaemonVersion(): string {
-  return `${DAEMON_NAME} v${VERSION}`;
+  return `${DAEMON_NAME} v0.1.0`;
 }
