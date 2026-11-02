@@ -369,3 +369,21 @@ Tasks follow dependencies and role assignments defined in `AGENTS.md` and `docs/
 - **Acceptance Criteria:**
   - Executes simulation soak test.
   - Publishes `docs/QA_REPORT.md` detailing performance benchmarks (p95 latency < 150ms), reliability test results, and filed bug issues.
+
+### T-M5-07: Cascade Lock Release on Member Token Revocation
+- **Role:** backend
+- **Depends On:** T-M1-03, T-M1-06
+- **Acceptance Criteria:**
+  - When an admin calls `POST /api/v1/admin/tokens` with `action: 'revoke'`, any active file locks held by agents owned by that member are automatically released in the same transaction.
+
+### T-M5-08: Mobile Tab Transition Debounce
+- **Role:** frontend
+- **Depends On:** T-M3-08
+- **Acceptance Criteria:**
+  - Add a 100ms debounce to the mobile column selector in `BoardScreen.tsx` to prevent animation stutter when switching views during high-frequency SSE event bursts.
+
+### T-M5-09: Unauthenticated Endpoint Rate Limiter
+- **Role:** backend
+- **Depends On:** T-M1-11
+- **Acceptance Criteria:**
+  - Add an IP-based rate limiter (100 req/min) for unauthenticated routes (`/health`, `/`) to protect against unauthenticated denial-of-service attempts.

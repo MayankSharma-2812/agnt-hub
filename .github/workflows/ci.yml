@@ -8,7 +8,12 @@ on:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    name: Validate (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
       - name: Checkout repository
@@ -17,7 +22,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 9
+          version: 12
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,6 +33,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build
+        run: pnpm run build
+
       - name: Lint
         run: pnpm run lint
 
@@ -37,5 +45,72 @@ jobs:
       - name: Run tests
         run: pnpm run test
 
-      - name: Build
+  secret-scan:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Scan for committed secrets and unhashed credentials
+        run: |
+          echo "Scanning repository for committed credentials and .env secrets..."
+          FAILED=0
+
+          # Check for committed real .env files (excluding .env.example)
+          ENV_FILES=$(find . -maxdepth 3 -name ".env" -o -name ".env.local" -o -name ".env.production" || true)
+          if [ -n "$ENV_FILES" ]; then
+            echo "::error::Committed .env file detected: $ENV_FILES"
+            FAILED=1
+          fi
+
+          # Check for private keys
+          PRIVATE_KEYS=$(git grep -E --line-number "BEGIN (RSA |EC |OPENSSH |DSA )?PRIVATE KEY" || true)
+          if [ -n "$PRIVATE_KEYS" ]; then
+            echo "::error::Private key pattern detected in repository: $PRIVATE_KEYS"
+            FAILED=1
+          fi
+
+          # Check for unhashed 64-character bearer tokens (outside docs and mock fixtures)
+          LEAKED_TOKENS=$(git grep -E --line-number "Bearer [0-9a-f]{64}" -- ':!docs/**' ':!*.md' ':!**/fixtures/**' || true)
+          if [ -n "$LEAKED_TOKENS" ]; then
+            echo "::error::Raw bearer token pattern detected in codebase: $LEAKED_TOKENS"
+            FAILED=1
+          fi
+
+          if [ "$FAILED" -ne 0 ]; then
+            echo "Secret scanning failed. Remove sensitive data before merging."
+            exit 1
+          fi
+          echo "Secret scanning passed: No secrets or committed .env files found."
+
+  e2e-smoke:
+    name: Playwright Smoke Test
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 12
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build workspace
         run: pnpm run build
+
+      - name: Install Playwright Chromium with dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright E2E smoke tests and screenshot capture
+        run: pnpm --filter @agent-hub/web test:e2e

@@ -13,16 +13,101 @@ import { lockRoutes } from './routes/locks.js';
 import { artifactRoutes } from './routes/artifacts.js';
 import { runRoutes } from './routes/runs.js';
 import { eventRoutes } from './routes/events.js';
+import { generateUlid } from './services/ulid.js';
 
-export function buildApp(db: Database.Database): FastifyInstance {
+export interface BuildAppOptions {
+  logger?: boolean | object;
+}
+
+export function sanitizeUrl(rawUrl: string): string {
+  if (!rawUrl.includes('?')) return rawUrl;
+  const [basePath, qs] = rawUrl.split('?');
+  const params = new URLSearchParams(qs);
+  for (const key of Array.from(params.keys())) {
+    if (/token|key|secret|password|auth/i.test(key)) {
+      params.set(key, '[REDACTED]');
+    }
+  }
+  return `${basePath}?${params.toString()}`;
+}
+
+export function buildApp(db: Database.Database, options?: BuildAppOptions): FastifyInstance {
+  const defaultLoggerConfig = {
+    level: process.env.LOG_LEVEL || 'info',
+    redact: {
+      paths: [
+        'req.headers.authorization',
+        'req.headers.Authorization',
+        'req.body.token',
+        'req.query.token',
+        'token',
+        '*.token',
+      ],
+      censor: '[REDACTED]',
+    },
+    serializers: {
+      req(req: { id: string; method: string; url: string; headers: Record<string, string | undefined> }) {
+        return {
+          id: req.id,
+          method: req.method,
+          url: sanitizeUrl(req.url),
+          headers: {
+            ...req.headers,
+            authorization: req.headers.authorization ? '[REDACTED]' : undefined,
+          },
+        };
+      },
+    },
+  };
+
+  let loggerOption: boolean | object = false;
+  if (options?.logger === false) {
+    loggerOption = false;
+  } else if (typeof options?.logger === 'object') {
+    loggerOption = {
+      ...defaultLoggerConfig,
+      ...options.logger,
+      serializers: {
+        ...defaultLoggerConfig.serializers,
+        ...(options.logger as { serializers?: Record<string, unknown> }).serializers,
+      },
+    };
+  } else {
+    loggerOption = defaultLoggerConfig;
+  }
+
   const app = Fastify({
-    logger: false,
+    logger: loggerOption,
+    requestIdHeader: 'x-request-id',
+    genReqId: (req) => {
+      const header = req.headers['x-request-id'];
+      if (typeof header === 'string' && header.trim().length > 0) {
+        return header.trim();
+      }
+      return generateUlid();
+    },
   });
 
   // Attach database instance to each request
   app.addHook('onRequest', async (req) => {
     req.db = db;
   });
+
+  // Log structured request completion details if logging is enabled
+  if (loggerOption !== false) {
+    app.addHook('onResponse', async (req, reply) => {
+      req.log.info(
+        {
+          reqId: req.id,
+          method: req.method,
+          url: sanitizeUrl(req.url),
+          statusCode: reply.statusCode,
+          responseTime: reply.elapsedTime,
+        },
+        'request completed',
+      );
+    });
+  }
 
   // CORS headers
   app.addHook('onRequest', async (req, reply) => {
