@@ -1,0 +1,16 @@
+{
+  "name": "@agent-hub/web",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "dev": "echo 'web dev scaffold'",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@agent-hub/shared": "workspace:*"
+  }
+}

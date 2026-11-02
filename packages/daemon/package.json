@@ -1,0 +1,18 @@
+{
+  "name": "@agent-hub/daemon",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "hubd": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@agent-hub/shared": "workspace:*"
+  }
+}

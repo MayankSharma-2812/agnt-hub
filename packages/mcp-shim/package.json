@@ -1,0 +1,18 @@
+{
+  "name": "agent-hub-mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "agent-hub-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@agent-hub/shared": "workspace:*"
+  }
+}

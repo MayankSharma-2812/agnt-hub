@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": false,
+    "noEmit": true
+  },
+  "include": [],
+  "references": [
+    { "path": "./packages/shared" },
+    { "path": "./packages/mcp-shim" },
+    { "path": "./packages/daemon" },
+    { "path": "./apps/hub" },
+    { "path": "./apps/web" }
+  ]
+}
