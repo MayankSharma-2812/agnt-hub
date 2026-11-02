@@ -4,6 +4,7 @@ import { getStoredAuth } from '../api/client.js';
 
 export function useHubEvents() {
   const queryClient = useQueryClient();
+  const auth = getStoredAuth();
   const [isConnected, setIsConnected] = useState<boolean>(true);
   const [lastEventId, setLastEventId] = useState<number | null>(null);
   const [highlightedTaskId, setHighlightedTaskId] = useState<string | null>(null);
@@ -18,7 +19,6 @@ export function useHubEvents() {
   }, []);
 
   useEffect(() => {
-    const auth = getStoredAuth();
     if (!auth?.token) return;
 
     let unmounted = false;
@@ -94,7 +94,7 @@ export function useHubEvents() {
         eventSourceRef.current.close();
       }
     };
-  }, [queryClient, lastEventId, highlightTask]);
+  }, [queryClient, lastEventId, highlightTask, auth?.token, auth?.hubUrl]);
 
   return {
     isConnected,
