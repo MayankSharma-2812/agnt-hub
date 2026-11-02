@@ -1,8 +1,11 @@
-import { execFileSync } from 'node:child_process';
+import { execFile, execFileSync } from 'node:child_process';
+import { promisify } from 'node:util';
 import fs from 'node:fs';
 import path from 'node:path';
 import { loadConfig, getDefaultConfigPath } from './config.js';
 import { HubClient } from './client.js';
+
+const execFileAsync = promisify(execFile);
 
 export interface DoctorCheck {
   title: string;
@@ -189,6 +192,51 @@ export async function runDoctor(configPath?: string): Promise<DoctorReport> {
           status: 'warn',
           message: `'${config.agyPath}' not found in PATH or filesystem`,
           suggestion: 'Install agy or set agyPath in hubd.json to your test runner script',
+        });
+      }
+    }
+
+    // 9. MCP Shim check via --selftest
+    const candidatePaths = [
+      path.join(config.repoPath, 'packages', 'mcp-shim', 'dist', 'index.js'),
+      path.resolve(import.meta.dirname ?? '.', '../../mcp-shim/dist/index.js'),
+      path.resolve(import.meta.dirname ?? '.', '../mcp-shim/dist/index.js'),
+      path.join(config.repoPath, 'node_modules', '@agent-hub', 'mcp-shim', 'dist', 'index.js'),
+    ];
+    const mcpShimPath = candidatePaths.find((p) => fs.existsSync(p));
+
+    if (!mcpShimPath) {
+      checks.push({
+        title: 'MCP Shim Self-Test',
+        status: 'fail',
+        message: 'MCP shim entry point (index.js) not found',
+        suggestion: 'Run "pnpm --filter @agent-hub/mcp-shim build" to build the MCP shim',
+      });
+    } else {
+      try {
+        const { stdout } = await execFileAsync(process.execPath, [mcpShimPath, '--selftest'], {
+          env: {
+            ...process.env,
+            HUB_URL: config.hubUrl,
+            HUB_TOKEN: config.token,
+            HUB_AGENT_NAME: config.agentName,
+          },
+          encoding: 'utf8',
+          timeout: 10000,
+        });
+        checks.push({
+          title: 'MCP Shim Self-Test',
+          status: 'pass',
+          message: stdout.trim() || 'MCP shim --selftest passed',
+        });
+      } catch (err: unknown) {
+        const execErr = err as { stderr?: Buffer | string; stdout?: Buffer | string; message?: string };
+        const errorMsg = execErr.stderr?.toString().trim() || execErr.stdout?.toString().trim() || execErr.message || 'Unknown error';
+        checks.push({
+          title: 'MCP Shim Self-Test',
+          status: 'fail',
+          message: `MCP shim selftest failed: ${errorMsg}`,
+          suggestion: 'Ensure hub is reachable and token is valid, then rebuild with "pnpm --filter @agent-hub/mcp-shim build"',
         });
       }
     }

@@ -50,6 +50,7 @@ describe('hubd doctor Diagnostics', () => {
     expect(titles).toContain('Configuration File');
     expect(titles).toContain('Hub Server Connectivity');
     expect(titles).toContain('API Token & Member Authentication');
+    expect(titles).toContain('MCP Shim Self-Test');
 
     const formatted = formatDoctorReport(report);
     expect(formatted).toContain('=== hubd doctor diagnostics ===');
