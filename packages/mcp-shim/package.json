@@ -13,6 +13,11 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@agent-hub/shared": "workspace:*"
+    "@agent-hub/shared": "workspace:*",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6"
   }
 }

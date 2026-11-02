@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "agent-hub": {
+      "command": "node",
+      "args": ["/ABSOLUTE/PATH/TO/agent-hub/packages/mcp-shim/dist/index.js"],
+      "env": {
+        "HUB_URL": "http://localhost:3000",
+        "HUB_TOKEN": "PASTE_YOUR_HUB_TOKEN_HERE",
+        "HUB_AGENT_NAME": "backend-agent"
+      }
+    }
+  }
+}
