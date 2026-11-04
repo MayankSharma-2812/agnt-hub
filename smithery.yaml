@@ -1,0 +1,40 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+startCommand:
+  type: stdio
+
+configSchema:
+  type: object
+  required:
+    - hubUrl
+    - hubToken
+  properties:
+    hubUrl:
+      type: string
+      title: "Agent Hub URL"
+      description: "The base URL where your Agent Hub Fastify server is running (e.g. http://localhost:3000)."
+      default: "http://localhost:3000"
+    hubToken:
+      type: string
+      title: "Agent Hub Bearer Token"
+      description: "The API bearer token to authenticate with Agent Hub."
+    agentName:
+      type: string
+      title: "Agent Name"
+      description: "The name identifier for this agent instance (e.g. backend-agent)."
+      default: "backend-agent"
+
+commandFunction:
+  |- (config) => ({
+       command: 'node',
+       args: ['packages/mcp-shim/dist/index.js'],
+       env: {
+         HUB_URL: config.hubUrl || 'http://localhost:3000',
+         HUB_TOKEN: config.hubToken,
+         HUB_AGENT_NAME: config.agentName || 'backend-agent'
+       }
+     })
+
+exampleConfig:
+  hubUrl: "http://localhost:3000"
+  hubToken: "sample-token-here"
+  agentName: "backend-agent"
