@@ -40,3 +40,8 @@ Thumbs.db
 # Test outputs
 coverage/
 .vitest/
+
+# Agent Hub Runtime & Worktrees
+.worktrees/
+backups/
+
