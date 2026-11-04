@@ -9,6 +9,10 @@
 [![TailwindCSS](https://img.shields.io/badge/Tailwind-3.x-38B2AC?logo=tailwind_css)](https://tailwindcss.com/)
 [![Tests Passing](https://img.shields.io/badge/Tests-63%2F63%20Passed-brightgreen)](https://github.com/MayankSharma-2812/agnt-hub)
 
+<p align="center">
+  <img src="assets/demo.gif" alt="Agent Hub Live Kanban Demo" width="100%" />
+</p>
+
 ---
 
 ## ⚡ Why Agent Hub?
