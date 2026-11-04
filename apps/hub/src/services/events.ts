@@ -46,7 +46,7 @@ export function emitEvent(
 }
 
 function broadcastSseEvent(event: Event): void {
-  const data = `id: ${event.id}\nevent: ${event.type}\ndata: ${JSON.stringify(event)}\n\n`;
+  const data = `id: ${event.id}\ndata: ${JSON.stringify(event)}\n\n`;
   for (const [clientId, client] of sseClients.entries()) {
     try {
       client.reply.raw.write(data);
@@ -83,7 +83,7 @@ export function handleSseConnection(
         .all(sinceId) as Event[];
 
       for (const ev of pastEvents) {
-        reply.raw.write(`id: ${ev.id}\nevent: ${ev.type}\ndata: ${JSON.stringify(ev)}\n\n`);
+        reply.raw.write(`id: ${ev.id}\ndata: ${JSON.stringify(ev)}\n\n`);
       }
     }
   }

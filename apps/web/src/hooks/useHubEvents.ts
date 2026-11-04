@@ -41,13 +41,13 @@ export function useHubEvents() {
         backoffRef.current = 1000;
       };
 
-      es.onmessage = (e) => {
+      const handleEventMessage = (e: MessageEvent) => {
         try {
           const event = JSON.parse(e.data);
           if (event.id) setLastEventId(event.id);
 
           // Invalidate relevant queries based on event type
-          if (event.type.startsWith('task.')) {
+          if (event.type?.startsWith('task.')) {
             queryClient.invalidateQueries({ queryKey: ['tasks'] });
             let payload: Record<string, unknown> = {};
             try {
@@ -58,11 +58,11 @@ export function useHubEvents() {
             if (payload?.taskId) {
               highlightTask(payload.taskId as string);
             }
-          } else if (event.type.startsWith('agent.')) {
+          } else if (event.type?.startsWith('agent.')) {
             queryClient.invalidateQueries({ queryKey: ['agents'] });
-          } else if (event.type.startsWith('message.')) {
+          } else if (event.type?.startsWith('message.')) {
             queryClient.invalidateQueries({ queryKey: ['messages'] });
-          } else if (event.type.startsWith('lock.')) {
+          } else if (event.type?.startsWith('lock.')) {
             queryClient.invalidateQueries({ queryKey: ['locks'] });
           }
 
@@ -71,6 +71,25 @@ export function useHubEvents() {
           // ignore keep-alive
         }
       };
+
+      es.onmessage = handleEventMessage;
+
+      const eventNames = [
+        'task.created',
+        'task.claimed',
+        'task.status_changed',
+        'task.updated',
+        'task.deleted',
+        'agent.registered',
+        'agent.heartbeat',
+        'agent.offline',
+        'lock.acquired',
+        'lock.released',
+        'message.sent',
+      ];
+      for (const name of eventNames) {
+        es.addEventListener(name, handleEventMessage as EventListener);
+      }
 
       es.onerror = () => {
         setIsConnected(false);
