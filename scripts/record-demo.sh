@@ -7,6 +7,12 @@ PROJECT_ID="01M6DK37SMSA6QR4N7K4K4SR9N"
 
 echo "=== 🎬 Starting Live Agent Hub Demo Sequence ==="
 
+# Auto-cleanup any previous demo tasks so the board starts completely clean
+sqlite3 /home/mayank-sharma/Projects/smt/apps/hub/agent-hub.db "
+DELETE FROM file_locks WHERE task_id IN (SELECT id FROM tasks WHERE title = 'Implement Autonomous Redis Cache');
+DELETE FROM tasks WHERE title = 'Implement Autonomous Redis Cache';
+" 2>/dev/null || true
+
 # 1. Create a Task
 echo "1️⃣ Creating task: 'Implement Autonomous Redis Cache'..."
 CREATE_RES=$(curl -s -X POST "$HUB_URL/api/v1/tasks" \
