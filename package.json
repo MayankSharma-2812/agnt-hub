@@ -2,7 +2,26 @@
   "name": "agent-hub",
   "version": "0.1.0",
   "private": true,
-  "description": "Multi-agent coordination hub for Antigravity AI agents",
+  "description": "Collaborative multi-agent coordination server and Kanban dashboard for autonomous AI coding agents (MCP + Antigravity + Git Worktrees)",
+  "author": "Mayank Sharma",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MayankSharma-2812/agnt-hub.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MayankSharma-2812/agnt-hub/issues"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai-agents",
+    "multi-agent",
+    "antigravity",
+    "kanban",
+    "worktree",
+    "developer-tools"
+  ],
   "scripts": {
     "dev": "pnpm --filter @agent-hub/hub dev",
     "build": "pnpm --recursive run build",
