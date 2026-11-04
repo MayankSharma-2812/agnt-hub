@@ -91,6 +91,9 @@ export async function apiRequest<T>(
   }
 
   if (!res.ok) {
+    if (res.status === 401) {
+      clearStoredAuth();
+    }
     const errObj = (data.error as { code?: string; message?: string; allowed?: string[]; details?: unknown }) || {};
     throw new ApiError(
       res.status,
