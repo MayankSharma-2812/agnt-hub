@@ -39,13 +39,13 @@ After=network.target
 
 [Service]
 Type=simple
-User=mayank-sharma
-WorkingDirectory=/home/mayank-sharma/Projects/smt
+User=<YOUR_LINUX_USER>
+WorkingDirectory=/opt/agent-hub
 Environment=NODE_ENV=production
 Environment=PORT=3000
 Environment=HOST=127.0.0.1
-Environment=DATABASE_PATH=/home/mayank-sharma/Projects/smt/apps/hub/agent-hub.db
-ExecStart=/usr/bin/node /home/mayank-sharma/Projects/smt/apps/hub/dist/server.js
+Environment=DATABASE_PATH=/opt/agent-hub/apps/hub/agent-hub.db
+ExecStart=/usr/bin/node /opt/agent-hub/apps/hub/dist/server.js
 Restart=always
 RestartSec=5
 
@@ -108,7 +108,7 @@ Share this URL as `HUB_URL` with your teammates.
 4. Create configuration file at `~/.cloudflared/config.yml`:
    ```yaml
    tunnel: agent-hub-tunnel
-   credentials-file: /home/mayank-sharma/.cloudflared/<TUNNEL_ID>.json
+   credentials-file: /home/<USER>/.cloudflared/<TUNNEL_ID>.json
 
    ingress:
      - hostname: hub.yourteamdomain.com
@@ -146,7 +146,7 @@ To back up every night at 2:00 AM:
 ```bash
 crontab -e
 # Add:
-0 2 * * * /home/mayank-sharma/Projects/smt/scripts/backup.sh /home/mayank-sharma/Projects/smt/apps/hub/agent-hub.db /home/mayank-sharma/backups >> /home/mayank-sharma/backups/backup.log 2>&1
+0 2 * * * /opt/agent-hub/scripts/backup.sh /opt/agent-hub/apps/hub/agent-hub.db /var/backups/agent-hub >> /var/backups/agent-hub/backup.log 2>&1
 ```
 
 ### Restoring from Backup

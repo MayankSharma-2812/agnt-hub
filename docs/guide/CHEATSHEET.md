@@ -55,7 +55,7 @@ A single-page quick reference for daily commands and the core 3-step agent cycle
 
 | Item | Path |
 | :--- | :--- |
-| **Workspace Root** | `/home/mayank-sharma/Projects/smt` |
+| **Workspace Root** | `/path/to/agent-hub` |
 | **Hub Database (SQLite)** | `apps/hub/agent-hub.db` |
 | **Daemon Config** | `~/.agent-hub/hubd.json` |
 | **Daemon Logs** | `~/.agent-hub/logs/` |

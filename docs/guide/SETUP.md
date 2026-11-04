@@ -274,7 +274,7 @@ Add the `agent-hub` entry to your `mcp_config.json`:
 }
 ```
 
-> **Windows Note:** Ensure backslashes in paths are escaped as `\\` (e.g. `"C:\\Users\\Mayank\\Projects\\smt\\packages\\mcp-shim\\dist\\index.js"`).
+> **Windows Note:** Ensure backslashes in paths are escaped as `\\` (e.g. `"C:\\Users\\Developer\\Projects\\agent-hub\\packages\\mcp-shim\\dist\\index.js"`).
 
 ### Verify MCP Shim Self-Test
 Run the `--selftest` flag from your terminal:
@@ -283,7 +283,7 @@ HUB_URL="http://localhost:3000" HUB_TOKEN="<YOUR_TOKEN>" HUB_AGENT_NAME="backend
 ```
 *Expected Output:*
 ```text
-OK: Authenticated as agent "backend-agent" [registered] for member "Mayank Sharma"
+OK: Authenticated as agent "backend-agent" [registered] for member "Developer"
 ```
 
 ---
@@ -323,9 +323,9 @@ pnpm --filter @agent-hub/daemon hubd doctor
 
 ✓ [PASS] Node.js Version: v24.22.0 (>= 20.0.0)
 ✓ [PASS] Git Binary: git version 2.53.0
-✓ [PASS] Configuration File: Valid config loaded from /home/mayank-sharma/.agent-hub/hubd.json
-✓ [PASS] Git Repository Path: Valid git repository at /home/mayank-sharma/Projects/smt
-✓ [PASS] Worktree Directory Writable: Write permissions verified for /home/mayank-sharma/Projects/smt/.worktrees
+✓ [PASS] Configuration File: Valid config loaded from ~/.agent-hub/hubd.json
+✓ [PASS] Git Repository Path: Valid git repository at /path/to/agent-hub
+✓ [PASS] Worktree Directory Writable: Write permissions verified for /path/to/agent-hub/.worktrees
 ✓ [PASS] Hub Server Connectivity: Hub at http://localhost:3000 is online (status: ok)
 ✓ [PASS] API Token & Member Authentication: Authenticated as member "Admin"
 ✓ [PASS] Antigravity CLI (agy): Found executable at agy

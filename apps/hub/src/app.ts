@@ -13,6 +13,7 @@ import { lockRoutes } from './routes/locks.js';
 import { artifactRoutes } from './routes/artifacts.js';
 import { runRoutes } from './routes/runs.js';
 import { eventRoutes } from './routes/events.js';
+import { calcRoutes } from './routes/calc.js';
 import { generateUlid } from './services/ulid.js';
 
 export interface BuildAppOptions {
@@ -141,6 +142,7 @@ export function buildApp(db: Database.Database, options?: BuildAppOptions): Fast
   app.register(artifactRoutes);
   app.register(runRoutes);
   app.register(eventRoutes);
+  app.register(calcRoutes);
 
   // Serve static web build if present
   const possiblePaths = [
@@ -156,7 +158,6 @@ export function buildApp(db: Database.Database, options?: BuildAppOptions): Fast
       app.register(fastifyStatic, {
         root: distPath,
         prefix: '/',
-        wildcard: false,
       });
       break;
     }
