@@ -1,0 +1,27 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/server.json",
+  "maintainers": [
+    "MayankSharma-2812"
+  ],
+  "name": "agnt-hub",
+  "description": "Coordination server and live Kanban dashboard for multi-agent AI coding with file locking and worktree isolation.",
+  "type": "mcp_server",
+  "status": "stable",
+  "transport": [
+    "stdio",
+    "http"
+  ],
+  "categories": [
+    "developer-tools",
+    "coding-agents"
+  ],
+  "keywords": [
+    "mcp",
+    "ai-agents",
+    "coordination",
+    "file-locking",
+    "kanban",
+    "git-worktrees"
+  ],
+  "github": "https://github.com/MayankSharma-2812/agnt-hub"
+}
